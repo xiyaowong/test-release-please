@@ -1,0 +1,29 @@
+name: Release
+
+on: [pull_request, push]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    release-please:
+        name: release-please
+        if: ${{ github.ref == 'refs/heads/main' }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: google-github-actions/release-please-action@v3
+              id: release
+              with:
+                  release-type: node
+                  package-name: test
+                  bump-minor-pre-major: true
+                  changelog-types: >
+                      [
+                        { "type": "feat", "section": "Features", "hidden": false },
+                        { "type": "fix", "section": "Bug Fixes", "hidden": false },
+                        { "type": "docs", "section": "Documentation", "hidden": false },
+                        { "type": "refactor", "section": "Refactor", "hidden": false },
+                        { "type": "perf", "section": "Performance Improvements", "hidden": false }
+                      ]
+                  token: ${{ secrets.GITHUB_TOKEN }}
